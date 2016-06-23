@@ -64,13 +64,13 @@ namespace Grades.Tests.Types
             GradeBook book2 = book1;
 
             GiveBookName(ref book2);
-            Assert.AreEqual("A GradeBook", book2.name);
+            Assert.AreEqual("A GradeBook", book2.Name);
         }
 
         private void GiveBookName(ref GradeBook book)
         {
             book = new GradeBook();
-            book.name = "A GradeBook";
+            book.Name = "A GradeBook";
         }
 
         [TestMethod]
@@ -102,10 +102,10 @@ namespace Grades.Tests.Types
             GradeBook g1 = new GradeBook();
             GradeBook g2 = g1;
 
-            g1.name = "Testing references";
+            g1.Name = "Testing references";
 
-            Assert.AreEqual(g1.name, g2.name);
-            Assert.AreSame(g1.name, g2.name);
+            Assert.AreEqual(g1.Name, g2.Name);
+            Assert.AreSame(g1.Name, g2.Name);
         }
     }
 }
