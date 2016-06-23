@@ -34,6 +34,8 @@ namespace Grades
             return stats;
         }
 
+        public string name;
+
         public List<float> getGrades()
         {
             return grades;
