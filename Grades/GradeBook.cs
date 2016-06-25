@@ -49,14 +49,17 @@ namespace Grades
                 {
                     if (value != _name)
                     {
-                        NameChanged(_name, value);
+                        NameChangedEventArgs args = new NameChangedEventArgs();
+                        args.ExistingName = _name;
+                        args.NewName = value;
+                        NameChanged(this, args);
                     }
                     _name = value;
                 }
             }
         }
 
-        public NameChangedDelegate NameChanged;
+        public event NameChangedDelegate NameChanged;
 
         public List<float> getGrades()
         {
