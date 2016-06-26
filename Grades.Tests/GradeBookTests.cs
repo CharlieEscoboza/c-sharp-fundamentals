@@ -43,5 +43,27 @@ namespace Grades.Tests
             GradeStatistics result = book.ComputeStatistics();
             Assert.AreEqual(50, result.AverageGrade);
         }
+
+        [TestMethod]
+        public void LetterGrade()
+        {
+            GradeBook book = new GradeBook();
+            book.AddGrade(100);
+            book.AddGrade(100);
+
+            GradeStatistics grades = book.ComputeStatistics();
+            Assert.AreEqual("A", grades.LetterGrade);
+        }
+
+        [TestMethod]
+        public void Description()
+        {
+            GradeBook book = new GradeBook();
+            book.AddGrade(50);
+            book.AddGrade(50);
+
+            GradeStatistics grades = book.ComputeStatistics();
+            Assert.AreEqual("Fail", grades.Description);
+        }
     }
 }

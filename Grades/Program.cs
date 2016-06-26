@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,24 +11,68 @@ namespace Grades
     {
         static void Main(string[] args)
         {
-            GradeBook book = new GradeBook();
-            book.NameChanged += OnNameChange;
+            IGradeTracker book = CreateGradeBook();
+            //book.NameChanged += onNameChange;
+            GetBookName(book);
+            AddGrades(book);
+            SaveGrades(book);
+            DisplayGradeStats(book);
+        }
+        
 
-            book.Name = "A Charlie's Grade book";
-            book.Name = "A Grade's book";
-            book.AddGrade(95);
-            book.AddGrade(89.5f);
-            book.AddGrade(75);
+        private static IGradeTracker CreateGradeBook()
+        {
+            return new ThrowAwayGradeBook();
+        }
 
+        private static void DisplayGradeStats(IGradeTracker book)
+        {
             GradeStatistics stats = book.ComputeStatistics();
+
+            foreach (float grade in book)
+            {
+                Console.WriteLine(grade);
+            }
+
+
             WriteResult("Average", stats.AverageGrade);
             WriteResult("Highest", (int)stats.HighestGrade);
             WriteResult("Lowest", stats.LowestGrade);
+            WriteResult("Grade", stats.LetterGrade);
+            WriteResult("You've", stats.Description);
         }
 
-        static void WriteResult(string description, int result)
+        private static void SaveGrades(IGradeTracker book)
         {
-            Console.WriteLine(description + ": " + result);
+            using (StreamWriter outpiutFile = File.CreateText("grades.txt"))
+            {
+                book.WriteGrades(outpiutFile);
+            }
+        }
+
+        private static void AddGrades(IGradeTracker book)
+        {
+            book.AddGrade(95);
+            book.AddGrade(89.5f);
+            book.AddGrade(75);
+        }
+
+        private static void GetBookName(IGradeTracker book)
+        {
+            Console.WriteLine("Please enter a book Name");
+
+            try
+            {
+                book.Name = Console.ReadLine();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         static void WriteResult(string description, float result)
@@ -35,9 +80,14 @@ namespace Grades
             Console.WriteLine($"{description}: {result:F2}");
         }
 
-        static void OnNameChange(object sender, NameChangedEventArgs args)
+        static void WriteResult(string description, string result)
         {
-            Console.WriteLine($"Grade book changing name from {args.ExistingName} to {args.NewName}");
+            Console.WriteLine($"{description}: {result}");
+        }
+
+        static void onNameChange(object sender, NameChangedEventArgs args)
+        {
+            Console.WriteLine($"The books name has been changed from {args.ExistingName} to {args.NewName}");
         }
     }
 }
